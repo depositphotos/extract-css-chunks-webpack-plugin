@@ -343,14 +343,14 @@ class ExtractCssChunksPlugin {
                   Template.indent([
                     'var tag = existingLinkTags[i];',
                     'var dataHref = tag.getAttribute("data-href") || tag.getAttribute("href");',
-                    'if((tag.rel === "stylesheet" || tag.rel === "preload") && (dataHref === href || dataHref === fullhref)) return resolve();',                  ]),
+                    'if((tag.rel === "stylesheet" || tag.rel === "preload") && (dataHref === href || dataHref === fullhref)) return resolve("server-rendered");',                  ]),
                   '}',
                   'var existingStyleTags = document.getElementsByTagName("style");',
                   'for(var i = 0; i < existingStyleTags.length; i++) {',
                   Template.indent([
                     'var tag = existingStyleTags[i];',
                     'var dataHref = tag.getAttribute("data-href");',
-                    'if(dataHref === href || dataHref === fullhref) return resolve();',
+                    'if(dataHref === href || dataHref === fullhref) return resolve("server-rendered");',
                   ]),
                   '}',
                   'var linkTag = document.createElement("link");',
@@ -384,8 +384,9 @@ class ExtractCssChunksPlugin {
                     ? `var insert = ${insert};\ninsert(linkTag);`
                     : 'var head = document.getElementsByTagName("head")[0]; head.appendChild(linkTag)',
                 ]),
-                '}).then(function() {',
+                '}).then(function(isSSR) {',
                 Template.indent([
+                  'if (isSSR) return;'
                   'installedCssChunks[chunkId] = 0;',
                   'if(supportsPreload) {',
                   Template.indent([
