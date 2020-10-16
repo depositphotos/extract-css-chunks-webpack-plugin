@@ -386,7 +386,7 @@ class ExtractCssChunksPlugin {
                 ]),
                 '}).then(function(isSSR) {',
                 Template.indent([
-                  'if (isSSR) return;'
+                  'if (isSSR === "server-rendered") return;'
                   'installedCssChunks[chunkId] = 0;',
                   'if(supportsPreload) {',
                   Template.indent([
